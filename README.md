@@ -1,2 +1,2 @@
 # MazeSolver
-Goal: create algorithm that can take a picture of a maze and solve it
+Goal: create a program that intakes a maze image and start and finish coordinates and produces solution image. 
