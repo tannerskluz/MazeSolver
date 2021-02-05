@@ -63,7 +63,7 @@ if __name__ == "__main__":
 	#maze_w_solution.show()
 
 	#save image
-	save_path = image_path + '_solution.png'
+	save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[0] + '_solution.png'
 	print("Saving image under: ", save_path)
 	maze_w_solution.save(save_path)
 
