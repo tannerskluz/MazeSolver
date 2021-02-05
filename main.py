@@ -37,8 +37,8 @@ if __name__ == "__main__":
 		exit()
 
 	print("Input file: ", image_path)
-	print("Start: (" + str(x_start) + ', ' + str(y_start) + ')')
-	print("Start: (" + str(x_end) + ', ' + str(y_end) + ')')
+	print("Start coordinate: (" + str(x_start) + ', ' + str(y_start) + ')')
+	print("End coordinate: (" + str(x_end) + ', ' + str(y_end) + ')')
 	file_check = Path(image_path)
 
 	#check that file exits
@@ -47,6 +47,7 @@ if __name__ == "__main__":
 		exit()
 
 	image_array_color = cv2.imread(image_path,1)
+	#cv2_to_PIL(image_array_color).show()
 
 	#returns preprocessed image in binary output form
 	processed_bits = preprocess.regular_threshold(image_path)
@@ -59,8 +60,10 @@ if __name__ == "__main__":
 	cv2.circle(image_array_color, (x_end, y_end), 5, (255,0,0), -1)
 
 	maze_w_solution = cv2_to_PIL(image_array_color)
-	maze_w_solution.show()
+	#maze_w_solution.show()
 
 	#save image
-	#maze_w_solution.save(image_path + '_solution.png')
+	save_path = image_path + '_solution.png'
+	print("Saving image under: ", save_path)
+	maze_w_solution.save(save_path)
 
