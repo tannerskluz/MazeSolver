@@ -1,0 +1,5 @@
+maze_images/hard_maze.png 300,340 800,815
+maze_images/hard_maze2_cropped.png 10,130 1125,1070
+maze_images/circle_maze.png 143,3 145,90
+maze_images/simple_maze2.png 25,25 367,245
+maze_images/labirynth.jpg 320,30 300,300
