@@ -21,14 +21,21 @@ def draw_path(img,path, thickness=2):
 
 if __name__ == "__main__":
 	#check that command line argument is taken in
-	if len(sys.argv) < 6:
-		print("How to run: \npython3 main.py ~~path_to_image~~ ~xstart~ ~ystart~ ~xend~ ~yend~")
+	if len(sys.argv) < 4:
+		print("How to run: \npython3 main.py ~~path_to_image~~ ~xstart,ystart~ ~xend,yend~")
 		exit()
 	image_path = sys.argv[1]
-	x_start = int(sys.argv[2])
-	y_start = int(sys.argv[3])
-	x_end = int(sys.argv[4])
-	y_end = int(sys.argv[5])
+	start = sys.argv[2]
+	end = sys.argv[3]
+	try:
+		x_start = int((start.split(','))[0])
+		y_start = int((start.split(','))[1])
+		x_end = int((end.split(','))[0])
+		y_end = int((end.split(','))[1])
+	except:
+		print("How to run: \npython3 main.py ~~path_to_image~~ ~xstart,ystart~ ~xend,yend~")
+		exit()
+
 	print("Input file: ", image_path)
 	print("Start: (" + str(x_start) + ', ' + str(y_start) + ')')
 	print("Start: (" + str(x_end) + ', ' + str(y_end) + ')')
@@ -53,3 +60,7 @@ if __name__ == "__main__":
 
 	maze_w_solution = cv2_to_PIL(image_array_color)
 	maze_w_solution.show()
+
+	#save image
+	#maze_w_solution.save(image_path + '_solution.png')
+
