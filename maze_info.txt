@@ -5,3 +5,4 @@ maze_images/simple_maze2.png 25,25 367,245
 maze_images/labirynth.jpg 320,30 300,300
 maze_images/user_images/drawn_maze.jpg 190,205 1170,840
 maze_images/hexagon_maze2.png 420,36 400,735
+maze_images/user_images/drawn_maze2.jpg 1000,350 1000,2200
