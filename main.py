@@ -9,14 +9,14 @@ import bfs_solve as bfs
 def cv2_to_PIL(image):
 	return Image.fromarray(image)
 
-def draw_path(img,path, thickness=2):
-    '''path is a list of (x,y) tuples'''
+#path is list of tuples
+def draw_path(img, path, thickness=5):
     print('drawing path')
     x0,y0=path[0]
     for vertex in path[1:]:
         #print(vertex)
         x1,y1=vertex
-        cv2.line(img,(x0,y0),(x1,y1),(0,0,255),thickness)
+        cv2.line(img,(x0,y0),(x1,y1),(255,0,0),thickness)
         x0,y0=vertex
 
 if __name__ == "__main__":
@@ -47,6 +47,7 @@ if __name__ == "__main__":
 		exit()
 
 	image_array_color = cv2.imread(image_path,1)
+	height, width, channels = image_array_color.shape
 	#cv2_to_PIL(image_array_color).show()
 
 	#returns preprocessed image in binary output form
@@ -54,13 +55,23 @@ if __name__ == "__main__":
 	# view = cv2_to_PIL(processed_bits)
 	# view.show()
 
+	path_pixels = 6
+	circle_r = 6
+	if max(height, width) >= 2000:
+		path_pixels = 10
+		circle_r = 10
+	elif max(height, width) >= 1000:
+		path_pixels = 8
+		circle_r = 8
+
+
 	solve_path = bfs.find_shortest_path_bfs(processed_bits, x_start, y_start, x_end, y_end)
-	draw_path(image_array_color, solve_path, 6)
-	cv2.circle(image_array_color, (x_start, y_start), 5, (0,200,40), -1)
-	cv2.circle(image_array_color, (x_end, y_end), 5, (255,0,0), -1)
+	draw_path(image_array_color, solve_path, path_pixels)
+	cv2.circle(image_array_color, (x_start, y_start), circle_r, (0,200,40), -1)
+	cv2.circle(image_array_color, (x_end, y_end), circle_r, (0,0,255), -1)
 
 	maze_w_solution = cv2_to_PIL(image_array_color)
-	#maze_w_solution.show()
+	# maze_w_solution.show()
 
 	#save image
 	save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[0] + '_solution.png'
