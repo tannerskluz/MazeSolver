@@ -23,8 +23,8 @@ def find_shortest_path_bfs(matrix, x_start, y_start, x_end, y_end):
     #let 0 be black (can't visit)
     #let 1 be white (can visit)
     lenrows, lencols = matrix.shape
-    print('rows', lenrows)
-    print('cols', lencols)
+    #print('rows', lenrows)
+    #print('cols', lencols)
     vectorMatrix = np.full((lenrows, lencols), None)
     for r in range(lenrows):
         for c in range(lencols):
@@ -44,7 +44,7 @@ def find_shortest_path_bfs(matrix, x_start, y_start, x_end, y_end):
             neighbor.xParent = visiting_node[0]
             neighbor.yParent = visiting_node[1]
             if neighbor.condition == -2:
-                print('found')
+                #print('found')
                 path = []
                 iter_v=neighbor
                 path.append((x_end,y_end))
