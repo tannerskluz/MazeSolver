@@ -23,7 +23,11 @@ def draw_path(img, path, thickness=5):
 if __name__ == "__main__":
 	#check that command line argument is taken in
 	if len(sys.argv) < 4:
-		print("How to run: \npython3 main.py ~~path_to_image~~ ~xStart,yStart~ ~xEnd,yEnd~ ~DebugOption(0/1)~")
+		print("How to run: \npython3 main.py ~~path_to_image~~ ~xStart,yStart~ ~xEnd,yEnd~ ~Run Option~ ~DebugOption(0/1)~")
+		print('Run Options:')
+		print('A = A*')
+		print('B = BFS')
+		print('AB = both')
 		exit()
 	image_path = sys.argv[1]
 	start = sys.argv[2]
@@ -39,11 +43,30 @@ if __name__ == "__main__":
 
 	debug = False
 	try:
-		debug_option = int(sys.argv[4])
+		debug_option = int(sys.argv[5])
 		if debug_option	== 1:
 			debug = True
 	except:
 		pass
+
+	runOption = sys.argv[4]
+	runAstar = False
+	runBFS = False
+	if 'A' in runOption:
+		runAstar = True
+	if 'B' in runOption:
+		runBFS = True
+	runBoth = runAstar and runBFS
+
+	if runBoth:
+		print('Running both BFS and A*')
+	elif runAstar:
+		print('Running A*')
+	elif runBFS:
+		print('Running BFS')
+	else:
+		print('Incorrect run option\nTerminating')
+		exit(0)
 
 	print("Input file: ", image_path)
 	if debug:
@@ -56,8 +79,9 @@ if __name__ == "__main__":
 		print("File does not exist, terminating")
 		exit()
 
-	image_array_color = cv2.imread(image_path,1)
-	height, width, channels = image_array_color.shape
+	image_array_color_BFS = cv2.imread(image_path,1)
+	image_array_color_Astar = cv2.imread(image_path,1)
+	height, width, channels = image_array_color_BFS.shape
 	if debug:
 		print("Image dimensions: (" + str(width) + ', ' + str(height) + ')')
 
@@ -76,23 +100,46 @@ if __name__ == "__main__":
 		print('Path pixels: ', path_pixels)
 		print('Circle pixels: ', circle_r)
 
-	start_time = time.time()
-	solve_path = bfs.find_shortest_path_bfs(processed_bits, x_start, y_start, x_end, y_end)
-	end_time = time.time()
 
-	print('Solution found in ' + str(end_time-start_time) + ' seconds')
+	if runBFS:
+		start_time_BFS = time.time()
+		solve_path_BFS = bfs.find_shortest_path_bfs(processed_bits, x_start, y_start, x_end, y_end)
+		end_time_BFS = time.time()
 
-	draw_path(image_array_color, solve_path, path_pixels)
-	cv2.circle(image_array_color, (x_start, y_start), circle_r, (0,200,40), -1)
-	cv2.circle(image_array_color, (x_end, y_end), circle_r, (0,0,255), -1)
+		print('BFS solution found in ' + str(end_time_BFS-start_time_BFS) + ' seconds')
 
-	maze_w_solution = cv2_to_PIL(image_array_color)
+		draw_path(image_array_color_BFS, solve_path_BFS, path_pixels)
+		cv2.circle(image_array_color_BFS, (x_start, y_start), circle_r, (0,200,40), -1)
+		cv2.circle(image_array_color_BFS, (x_end, y_end), circle_r, (0,0,255), -1)
+
+		maze_w_solution_BFS = cv2_to_PIL(image_array_color_BFS)
+		
+		if debug:
+			maze_w_solution_BFS.show()
+		else:
+			#save image
+			save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[0] + '_solutionBFS.png'
+			print("Saving image under: ", save_path)
+			maze_w_solution_BFS.save(save_path)
 	
-	if debug:
-		maze_w_solution.show()
-	else:
-		#save image
-		save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[0] + '_solution.png'
-		print("Saving image under: ", save_path)
-		maze_w_solution.save(save_path)
+	if runAstar:
+		start_time_Astar = time.time()
+		solve_path_Astar = bfs.find_shortest_path_bfs(processed_bits, x_start, y_start, x_end, y_end)
+		end_time_Astar = time.time()
+
+		print('A* solution found in ' + str(end_time_Astar-start_time_Astar) + ' seconds')
+
+		draw_path(image_array_color_Astar, solve_path_Astar, path_pixels)
+		cv2.circle(image_array_color_Astar, (x_start, y_start), circle_r, (0,200,40), -1)
+		cv2.circle(image_array_color_Astar, (x_end, y_end), circle_r, (0,0,255), -1)
+
+		maze_w_solution_Astar = cv2_to_PIL(image_array_color_Astar)
+		
+		if debug:
+			maze_w_solution_Astar.show()
+		else:
+			#save image
+			save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[0] + '_solutionAstar.png'
+			print("Saving image under: ", save_path)
+			maze_w_solution_Astar.save(save_path)
 
