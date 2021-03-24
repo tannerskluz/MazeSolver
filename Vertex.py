@@ -12,3 +12,6 @@ class Vertex:
 		self.gscore = gscore
 		self.closed = False
 		self.out_openset = True
+
+	def __lt__(self, b):
+		return self.fscore < b.fscore
