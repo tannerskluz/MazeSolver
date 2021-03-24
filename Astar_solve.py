@@ -40,8 +40,10 @@ def find_shortest_path_astar(matrix, x_start, y_start, x_end, y_end):
     start_vertex.fscore = heuristic(start_vertex, end_vertex)
     openSet = []
     heappush(openSet, start_vertex)
+    nodeCount = 1
     while openSet:
         current = heappop(openSet)
+        nodeCount +=1
         if current.condition == -2:
             print('found')
             path = []
@@ -55,7 +57,7 @@ def find_shortest_path_astar(matrix, x_start, y_start, x_end, y_end):
                     #print('itertype2')
                     #print(type(iter_v))
                     #print('test2')
-            return path
+            return path, nodeCount
         current.out_openset = True
         current.closed = False
         for neighbor in get_neighbors(vectorMatrix, current.y, current.x):
@@ -76,4 +78,4 @@ def find_shortest_path_astar(matrix, x_start, y_start, x_end, y_end):
                 heappush(openSet, neighbor)
     
     print('not found')
-    return None
+    return None, nodeCount

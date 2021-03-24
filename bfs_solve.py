@@ -35,8 +35,10 @@ def find_shortest_path_bfs(matrix, x_start, y_start, x_end, y_end):
     vectorMatrix[y_end][x_end].condition = -2
     queue = []
     queue.append((x_start, y_start))
+    nodeCount = 1
     while len(queue) > 0:
         visiting_node = queue.pop(0)
+        nodeCount +=1
         #print('visiting', visiting_node[0], visiting_node[1])
         neighbors = get_neighbors(vectorMatrix, visiting_node[1], visiting_node[0])
         for neighbor in neighbors:
@@ -58,8 +60,8 @@ def find_shortest_path_bfs(matrix, x_start, y_start, x_end, y_end):
                     #print('itertype2')
                     #print(type(iter_v))
                     #print('test2')
-                return path
+                return path, nodeCount
             else:
                 queue.append((neighbor.x, neighbor.y))
     print('not found')
-    return None
+    return None, nodeCount

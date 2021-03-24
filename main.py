@@ -6,6 +6,7 @@ import time
 from pathlib import Path
 import preprocess as preprocess
 import bfs_solve as bfs
+import Astar_solve as Astar
 
 def cv2_to_PIL(image):
 	return Image.fromarray(image)
@@ -100,13 +101,13 @@ if __name__ == "__main__":
 		print('Path pixels: ', path_pixels)
 		print('Circle pixels: ', circle_r)
 
-
 	if runBFS:
 		start_time_BFS = time.time()
-		solve_path_BFS = bfs.find_shortest_path_bfs(processed_bits, x_start, y_start, x_end, y_end)
+		solve_path_BFS, nodesVisited = bfs.find_shortest_path_bfs(processed_bits, x_start, y_start, x_end, y_end)
 		end_time_BFS = time.time()
 
 		print('BFS solution found in ' + str(end_time_BFS-start_time_BFS) + ' seconds')
+		print('Algorithm visisted ', nodesVisited, ' nodes')
 
 		draw_path(image_array_color_BFS, solve_path_BFS, path_pixels)
 		cv2.circle(image_array_color_BFS, (x_start, y_start), circle_r, (0,200,40), -1)
@@ -124,10 +125,11 @@ if __name__ == "__main__":
 	
 	if runAstar:
 		start_time_Astar = time.time()
-		solve_path_Astar = bfs.find_shortest_path_bfs(processed_bits, x_start, y_start, x_end, y_end)
+		solve_path_Astar, nodesVisited = Astar.find_shortest_path_astar(processed_bits, x_start, y_start, x_end, y_end)
 		end_time_Astar = time.time()
 
 		print('A* solution found in ' + str(end_time_Astar-start_time_Astar) + ' seconds')
+		print('Algorithm visited ', nodesVisited, ' nodes')
 
 		draw_path(image_array_color_Astar, solve_path_Astar, path_pixels)
 		cv2.circle(image_array_color_Astar, (x_start, y_start), circle_r, (0,200,40), -1)
