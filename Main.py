@@ -64,26 +64,35 @@ if __name__ == "__main__":
 		print("File does not exist, terminating")
 		exit()
 
+	print('-----------------------------')
 	user_maze = Maze(image_path, (x_start, y_start), (x_end, y_end))
 
 	if run_BFS:
 		bfs_solution_image, bfs_duration, bfs_number_nodes = user_maze.solve_bfs()
-		if debug:
-			bfs_solution_image.show()
-		else:
-			# save image
-			save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[
-				0] + '_solutionBFS.png'
-			print("Saving image under: ", save_path)
-			bfs_solution_image.save(save_path)
+		if bfs_number_nodes > 0:
+			print(f'BFS algorithm found a solution in {bfs_duration:.3f} seconds')
+			print(f'By visiting {bfs_number_nodes} nodes')
+			if debug:
+				bfs_solution_image.show()
+			else:
+				# save image
+				save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[
+					0] + '_solutionBFS.png'
+				print(f'Saving image under: {save_path}')
+				bfs_solution_image.save(save_path)
+		print('-----------------------------')
 
 	if run_a_star:
 		a_star_solution_image, a_star_duration, a_star_number_nodes = user_maze.solve_a_star()
-		if debug:
-			a_star_solution_image.show()
-		else:
-			# save image
-			save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[
-				0] + '_solutionA*.png'
-			print("Saving image under: ", save_path)
-			a_star_duration.save(save_path)
+		if a_star_number_nodes > 0:
+			print(f'A* algorithm found a solution in {a_star_duration:.3f} seconds')
+			print(f'By visiting {a_star_number_nodes} nodes')
+			if debug:
+				a_star_solution_image.show()
+			else:
+				# save image
+				save_path = 'maze_images/generated_solutions/' + image_path.split('/')[-1].split('.')[
+					0] + '_solutionA*.png'
+				print(f'Saving image under: {save_path}')
+				a_star_solution_image.save(save_path)
+		print('-----------------------------')

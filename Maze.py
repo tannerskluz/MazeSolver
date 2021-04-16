@@ -39,33 +39,37 @@ class Maze:
 		if self.bfs_mode:
 			if r > 0 and not self.node_matrix[r - 1][c].processed and not self.node_matrix[r - 1][c].condition == 0:
 				neighbors.append(self.node_matrix[r - 1][c])
-			if r < self.cols - 1 and not self.node_matrix[r + 1][c].processed and not self.node_matrix[r + 1][c].condition == 0:
+			if r < self.rows - 1 and not self.node_matrix[r + 1][c].processed and not self.node_matrix[r + 1][c].condition == 0:
 				neighbors.append(self.node_matrix[r + 1][c])
 			if c > 0 and not self.node_matrix[r][c - 1].processed and not self.node_matrix[r][c - 1].condition == 0:
 				neighbors.append(self.node_matrix[r][c - 1])
-			if c < self.rows - 1 and not self.node_matrix[r][c + 1].processed and not self.node_matrix[r][c + 1].condition == 0:
+			if c < self.cols - 1 and not self.node_matrix[r][c + 1].processed and not self.node_matrix[r][c + 1].condition == 0:
 				neighbors.append(self.node_matrix[r][c + 1])
 		else:
 			if r > 0 and not self.node_matrix[r - 1][c].condition == 0:
 				neighbors.append(self.node_matrix[r - 1][c])
-			if r < self.cols - 1 and not self.node_matrix[r + 1][c].condition == 0:
+			if r < self.rows - 1 and not self.node_matrix[r + 1][c].condition == 0:
 				neighbors.append(self.node_matrix[r + 1][c])
 			if c > 0 and not self.node_matrix[r][c - 1].condition == 0:
 				neighbors.append(self.node_matrix[r][c - 1])
-			if c < self.rows - 1 and not self.node_matrix[r][c + 1].condition == 0:
+			if c < self.cols - 1 and not self.node_matrix[r][c + 1].condition == 0:
 				neighbors.append(self.node_matrix[r][c + 1])
-		print(len(neighbors))
+		# print(len(neighbors))
 		return neighbors
 
 	def solve_bfs(self):
 		self.bfs_init()
 		duration, number_nodes_visited = self.find_path_bfs()
-		return self.draw_path(), duration, number_nodes_visited
+		if number_nodes_visited > 0:
+			return self.draw_solution_path(), duration, number_nodes_visited
+		return None, duration, number_nodes_visited
 
 	def solve_a_star(self):
 		self.a_star_init()
 		duration, number_nodes_visited = self.find_path_a_star()
-		return self.draw_path(), duration, number_nodes_visited
+		if number_nodes_visited > 0:
+			return self.draw_solution_path(), duration, number_nodes_visited
+		return None, duration, number_nodes_visited
 
 	def bfs_init(self):
 		self.bfs_mode = True
@@ -92,7 +96,7 @@ class Maze:
 		node_count = 1
 		while len(queue) > 0:
 			visiting_node = queue.pop(0)
-			print(visiting_node.col, visiting_node.row)
+			# print(visiting_node.col, visiting_node.row)
 			node_count += 1
 			neighbors = self.get_node_neighbors(visiting_node)
 			for neighbor_node in neighbors:
@@ -101,13 +105,14 @@ class Maze:
 				if neighbor_node.condition != -2:
 					queue.append(neighbor_node)
 				else:
-					print("BFS algorithm has found a solution path")
+					# print("BFS algorithm has found a solution path")
 					self.solution_path = self.generate_path(neighbor_node)
 					end_time = time.time()
-					return (start_time - end_time), node_count
+					return (end_time - start_time), node_count
 		end_time = time.time()
+		print('-----------------------------')
 		print("BFS algorithm did not find a solution path")
-		return (start_time - end_time), -1
+		return (end_time - start_time), -1
 
 	def find_path_a_star(self):
 		start_time = time.time()
@@ -120,9 +125,10 @@ class Maze:
 		node_count = 1
 		while open_set:
 			visiting_node = heappop(open_set)
-			print(visiting_node.col, visiting_node.row)
+			# print(visiting_node.col, visiting_node.row)
 			node_count += 1
 			if visiting_node.condition != -2:
+				# print('here')
 				visiting_node.out_open_set = True
 				visiting_node.closed = False
 				for neighbor in self.get_node_neighbors(visiting_node):
@@ -141,23 +147,24 @@ class Maze:
 						open_set.remove(neighbor)
 						heappush(open_set, neighbor)
 			else:
-				print("A* algorithm has found a solution path")
+				# print("A* algorithm has found a solution path")
 				self.solution_path = self.generate_path(visiting_node)
 				end_time = time.time()
-				return (start_time - end_time), node_count
+				return (end_time - start_time), node_count
 		end_time = time.time()
+		print('-----------------------------')
 		print("A* algorithm did not find a solution path")
-		return (start_time - end_time), -1
+		return (end_time - start_time), -1
 
 	def generate_path(self, node):
 		iter_node = node
 		path = list()
-		while iter_node.r != self.end_coordinate[1] or iter_node.c != self.end_coordinate[0]:
-			path.append((iter_node.c, iter_node.r))
+		while iter_node.row != self.start_coordinate[1] or iter_node.col != self.start_coordinate[0]:
+			path.append((iter_node.col, iter_node.row))
 			iter_node = iter_node.parent_node
 		return path
 
-	def draw_path(self):
+	def draw_solution_path(self):
 		path_pixels = 6
 		circle_r = 6
 		if max(self.rows, self.cols) >= 2000:
@@ -166,7 +173,6 @@ class Maze:
 		elif max(self.rows, self.cols) >= 1000:
 			path_pixels = 8
 			circle_r = 8
-		print("drawing path")
 		maze_image = self.image.copy()
 		x0, y0 = self.solution_path[0]
 		for node in self.solution_path[1:]:
