@@ -9,3 +9,4 @@ maze_images/user_images/drawn_maze2.jpg 1000,350 1000,2200
 maze_images/weird-al-yankovic.jpg 1000,1690 1980,150
 maze_images/skateboard2.jpg 2080,260 180,1220
 maze_images/brain_maze.jpg 250,590 900,1000
+maze_images/straight_path_border.PNG 100,205 760,200
