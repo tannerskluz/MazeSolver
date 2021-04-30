@@ -18,7 +18,7 @@ def heuristic(current_node, end_node):
 
 
 class Maze:
-	def __init__(self, image_path, start, end):
+	def __init__(self, image_path, start, end, draw_history):
 		self.image_path = image_path
 		self.start_coordinate = start
 		self.end_coordinate = end
@@ -32,6 +32,8 @@ class Maze:
 			exit(1)
 		self.rows, self.cols, self.channels = self.image.shape
 		self.bfs_mode = True
+		self.nodes_visited = list()
+		self.draw_nodes_visited_option = draw_history
 
 	def get_node_neighbors(self, node):
 		neighbors = list()
@@ -94,9 +96,12 @@ class Maze:
 		queue = list()
 		queue.append(self.node_matrix[self.start_coordinate[1]][self.start_coordinate[0]])
 		node_count = 1
+		self.nodes_visited = list()
 		while len(queue) > 0:
 			visiting_node = queue.pop(0)
 			# print(visiting_node.col, visiting_node.row)
+			if self.draw_nodes_visited_option:
+				self.nodes_visited.append((visiting_node.row, visiting_node.col))
 			node_count += 1
 			neighbors = self.get_node_neighbors(visiting_node)
 			for neighbor_node in neighbors:
@@ -123,9 +128,12 @@ class Maze:
 		open_set = []
 		heappush(open_set, start_node)
 		node_count = 1
+		self.nodes_visited = list()
 		while open_set:
 			visiting_node = heappop(open_set)
 			# print(visiting_node.col, visiting_node.row)
+			if self.draw_nodes_visited_option:
+				self.nodes_visited.append((visiting_node.row, visiting_node.col))
 			node_count += 1
 			if visiting_node.condition != -2:
 				# print('here')
@@ -174,6 +182,9 @@ class Maze:
 			path_pixels = 8
 			circle_r = 8
 		maze_image = self.image.copy()
+		if self.draw_nodes_visited_option:
+			for row,col in self.nodes_visited:
+				maze_image[row,col] = [192,192,192]
 		x0, y0 = self.solution_path[0]
 		for node in self.solution_path[1:]:
 			x1, y1 = node
