@@ -4,15 +4,15 @@ from pathlib import Path
 
 if __name__ == "__main__":
 	if len(sys.argv) < 4:
-		print("How to run: \npython3 main.py ~~path_to_image~~ ~xStart,yStart~ ~xEnd,yEnd~ ~Run Option~ ~DebugOption(0/1)~")
+		print("How to run: \npython3 Main.py ~AlgorithmOption(A/B/AB)~ ~ShowPathOption(0/1)~ ~SaveOption(0/1)~ ~~path_to_image~~ ~xStart,yStart~ ~xEnd,yEnd~")
 		print('Run Options:')
 		print('A = A*')
 		print('B = BFS')
 		print('AB = both')
 		exit()
-	image_path = sys.argv[1]
-	start = sys.argv[2]
-	end = sys.argv[3]
+	image_path = sys.argv[4]
+	start = sys.argv[5]
+	end = sys.argv[6]
 	x_start = 0
 	y_start = 0
 	x_end = 0
@@ -23,18 +23,25 @@ if __name__ == "__main__":
 		x_end = int((end.split(','))[0])
 		y_end = int((end.split(','))[1])
 	except Exception:
-		print("How to run: \npython3 main.py ~~path_to_image~~ ~x_start,y_start~ ~x_end,y_end~")
+		print("How to run: \npython3 Main.py ~AlgorithmOption(A/B/AB)~ ~ShowPathOption(0/1)~ ~SaveOption(0/1)~ ~~path_to_image~~ ~xStart,yStart~ ~xEnd,yEnd~")
 		exit()
 
-	debug = False
+	save = False
 	try:
-		debug_option = int(sys.argv[5])
-		if debug_option == 1:
-			debug = True
+		save_option = int(sys.argv[3])
+		if save_option == 1:
+			save = True
 	except Exception:
 		pass
 
-	run_option = sys.argv[4]
+	show_history_option = int(sys.argv[2])
+	if show_history_option == 1:
+		show_history = True
+	else:
+		show_history = False
+	
+
+	run_option = sys.argv[1]
 	run_a_star = False
 	run_BFS = False
 	if 'A' in run_option:
@@ -54,9 +61,8 @@ if __name__ == "__main__":
 		exit(0)
 
 	print("Input file: ", image_path)
-	if debug:
-		print("Start coordinate: (" + str(x_start) + ', ' + str(y_start) + ')')
-		print("End coordinate: (" + str(x_end) + ', ' + str(y_end) + ')')
+	print("Start coordinate: (" + str(x_start) + ', ' + str(y_start) + ')')
+	print("End coordinate: (" + str(x_end) + ', ' + str(y_end) + ')')
 	file_check = Path(image_path)
 
 	# check that file exits
@@ -65,14 +71,14 @@ if __name__ == "__main__":
 		exit()
 
 	print('-----------------------------')
-	user_maze = Maze(image_path, (x_start, y_start), (x_end, y_end))
+	user_maze = Maze(image_path, (x_start, y_start), (x_end, y_end), show_history)
 
 	if run_BFS:
 		bfs_solution_image, bfs_duration, bfs_number_nodes = user_maze.solve_bfs()
 		if bfs_number_nodes > 0:
 			print(f'BFS algorithm found a solution in {bfs_duration:.3f} seconds')
 			print(f'By visiting {bfs_number_nodes} nodes')
-			if debug:
+			if not save:
 				bfs_solution_image.show()
 			else:
 				# save image
@@ -87,7 +93,7 @@ if __name__ == "__main__":
 		if a_star_number_nodes > 0:
 			print(f'A* algorithm found a solution in {a_star_duration:.3f} seconds')
 			print(f'By visiting {a_star_number_nodes} nodes')
-			if debug:
+			if not save:
 				a_star_solution_image.show()
 			else:
 				# save image
